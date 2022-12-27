@@ -12,12 +12,7 @@ A React Native Library to support USB/BLE/Net printer, and the implementation of
 
 ## Installation
 ```
-npm i react-native-thermal-receipt-printer-image-qr
-npm i react-native-ping
-```
-or
-```
-yarn add react-native-thermal-receipt-printer-image-qr
+yarn add @30SAS-react-native-thermal-receipt-printer
 yarn add react-native-ping
 ```
 next step
