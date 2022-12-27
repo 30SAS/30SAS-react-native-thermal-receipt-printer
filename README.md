@@ -5,7 +5,8 @@ A React Native Library to support USB/BLE/Net printer, and the implementation of
 
 ![Node.js Package](https://github.com/30SAS/30SAS-react-native-thermal-receipt-printer/workflows/Node.js%20Package/badge.svg)
 
-### It is not yet a stable version of the library, I am working on the first stable version. ANDROID ONLY (For now, I still have to solve some bugs in iOS).
+### It is not yet a stable version of the library, I am working on the first stable version. 
+#### ANDROID ONLY (For now, I still have to solve some bugs in iOS).
 
 ## Installation
 ```
