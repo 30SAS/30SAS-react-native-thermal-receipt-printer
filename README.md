@@ -4,6 +4,7 @@
 ### It is not yet a stable version of the library, I am working on the first stable version. 
 #### ANDROID ONLY (For now, I still have to solve some bugs in iOS).
 
+
 Fork of `react-native-thermal-receipt-printer`, implement auto connect printer with usb
 A React Native Library to support USB/BLE/Net printer, and the implementation of functions added in the following library: [react-native-thermal-receipt-printer-image-qr](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr) (Library with some bugs).
 
