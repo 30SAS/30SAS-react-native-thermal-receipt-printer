@@ -1,4 +1,4 @@
-# 30SAS-react-native-thermal-receipt-printer
+# react-native-thermal-receipt-printer
 
 
 ### It is not yet a stable version of the library, I am working on the first stable version. 
