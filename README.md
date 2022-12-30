@@ -1,57 +1,9 @@
-# react-native-thermal-receipt-printer
-
-
-### It is not yet a stable version of the library, I am working on the first stable version. 
-#### ANDROID ONLY (For now, I still have to solve some bugs in iOS).
-
-
-Fork of `react-native-thermal-receipt-printer`, implement auto connect printer with usb
-A React Native Library to support USB/BLE/Net printer, and the implementation of functions added in the following library: [react-native-thermal-receipt-printer-image-qr](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr) (Library with some bugs).
-
-![Node.js Package](https://github.com/30SAS/30SAS-react-native-thermal-receipt-printer/workflows/Node.js%20Package/badge.svg)
-
-## Installation
-```
-yarn add @30SAS-react-native-thermal-receipt-printer
-yarn add react-native-ping
-```
-next step
-```
-# RN >= 0.60
-cd ios && pod install
-
-# RN < 0.60
-react-native link react-native-thermal-receipt-printer-image-qr
-```
-
-## Troubleshoot
-
-- when install in `react-native` version >= 0.60, xcode show this error
-
-```
-duplicate symbols for architecture x86_64
-```
-
-that because the .a library uses [CocoaAsyncSocket](https://github.com/robbiehanson/CocoaAsyncSocket) library and Flipper uses it too
-
-_Podfile_
-
-```diff
-...
-  use_native_modules!
-
-  # Enables Flipper.
-  #
-  # Note that if you have use_frameworks! enabled, Flipper will not work and
-  # you should disable these next few lines.
-  # add_flipper_pods!
-  # post_install do |installer|
-  #   flipper_post_install(installer)
-  # end
-...
-```
-
-and comment out code related to Flipper in `ios/AppDelegate.m`
+# react-native-thermal-receipt-printer-image-qr
+![npm](https://img.shields.io/npm/dw/react-native-thermal-receipt-printer-image-qr?logo=github)
+![npm](https://img.shields.io/npm/v/react-native-thermal-receipt-printer-image-qr?color=green&logo=npm&logoColor=green)
+- I fork this for my quickly project, this is not the official project.
+- Fork of `react-native-thermal-receipt-printer` and add implement :
+<br />
 
 | Implement    | Android            | IOS                |
 | ---------- | ------------------ | ------------------ |
@@ -76,32 +28,23 @@ and comment out code related to Flipper in `ios/AppDelegate.m`
 <img src="image/_screenshot.jpg" alt="screenshot" width="270" height="580"/>
 </div>
 
-## Development workflow
-
-To get started with the project, run `yarn bootstrap` in the root directory to install the required dependencies for each package:
-
-```sh
-yarn bootstrap
+## Installation
 ```
-
-While developing, you can run the [example app](/example/) to test your changes.
-
-To start the packager:
-
-```sh
-yarn example start
+npm i react-native-thermal-receipt-printer-image-qr
+npm i react-native-ping
 ```
-
-To run the example app on Android:
-
-```sh
-yarn example dev-android
+or
 ```
+yarn add react-native-thermal-receipt-printer-image-qr
+yarn add react-native-ping
+```
+next step
+```
+# RN >= 0.60
+cd ios && pod install
 
-To run the example app on iOS:
-
-```sh
-yarn example ios
+# RN < 0.60
+react-native link react-native-thermal-receipt-printer-image-qr
 ```
 
 ## API Reference
@@ -146,12 +89,11 @@ yarn example ios
 ```js
 import {
   COMMANDS
-} from 'react-native-thermal-receipt-printer-qr-image';
+} from 'react-native-thermal-receipt-printer-image-qr';
 ```
-[See more here](https://github.com/30SAS/30SAS-react-native-thermal-receipt-printer/blob/main/dist/utils/printer-commands.js)
+[See more here](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr/blob/main/dist/utils/printer-commands.js)
 
 ## Example
-
 **`Print Columns Text`**
 ```tsx
 const BOLD_ON = COMMANDS.TEXT_FORMAT.TXT_BOLD_ON;
@@ -181,4 +123,33 @@ imageWidth: 575,
 // paddingX: 100
 })
 ```
-[See more here](https://github.com/30SAS/30SAS-react-native-thermal-receipt-printer/blob/main/example/src/HomeScreen.tsx)
+[See more here](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr/blob/main/example/src/HomeScreen.tsx)
+
+## Troubleshoot
+
+- when install in `react-native` version >= 0.60, xcode show this error
+
+```
+duplicate symbols for architecture x86_64
+```
+
+that because the .a library uses [CocoaAsyncSocket](https://github.com/robbiehanson/CocoaAsyncSocket) library and Flipper uses it too
+
+_Podfile_
+
+```diff
+...
+  use_native_modules!
+
+  # Enables Flipper.
+  #
+  # Note that if you have use_frameworks! enabled, Flipper will not work and
+  # you should disable these next few lines.
+  # add_flipper_pods!
+  # post_install do |installer|
+  #   flipper_post_install(installer)
+  # end
+...
+```
+
+and comment out code related to Flipper in `ios/AppDelegate.m`
