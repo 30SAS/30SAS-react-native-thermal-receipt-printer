@@ -180,7 +180,7 @@ public class USBPrinterAdapter implements PrinterAdapter {
 
     private boolean openConnection() {
         if (mUsbDevice == null) {
-            Log.e(LOG_TAG, "USB Deivce is not initialized");
+            Log.e(LOG_TAG, "USB Device is not initialized");
             return false;
         }
         if (mUSBManager == null) {
