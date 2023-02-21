@@ -1,7 +1,8 @@
 #import <Foundation/Foundation.h>
 
-#import "RNBLEPrinter.h"
 #import "PrinterSDK.h"
+#import "RNBLEPrinter.h"
+#import <CoreBluetooth/CoreBluetooth.h>
 
 @implementation RNBLEPrinter
 
