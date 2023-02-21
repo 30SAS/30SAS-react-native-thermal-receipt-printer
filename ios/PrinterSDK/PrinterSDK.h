@@ -49,6 +49,8 @@ typedef enum CodeBarType
 - (void)scanPrintersWithCompletion:(PrinterScanPrintersCallback)callback;
 - (void)stopScanPrinters;
 
+- (CBCentralManager*)centralManager;
+
 - (BOOL)connectIP:(NSString*)ipAddress;
 
 - (void)connectBT:(Printer*)printer;
