@@ -1,5 +1,5 @@
 {
-  "name": "@30SAS/react-native-thermal-receipt-printer-image",
+  "name": "@30SAS/react-native-thermal-receipt-printer",
   "version": "0.0.1",
   "description": "Fork of react-native-thermal-receipt-printer A React Native Library to support USB/BLE/Net printer, and the implementation of functions added in the following library: react-native-thermal-receipt-printer-image-qr",
   "main": "dist/index.js",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/30SAS/react-native-thermal-receipt-printer-image.git"
+    "url": "https://github.com/30SAS/react-native-thermal-receipt-printer.git"
   },
   "files": [
     "dist",
@@ -59,6 +59,6 @@
     "react-native-ping": "*"
   },
   "author": "30SAS",
-  "homepage": "https://github.com/30SAS/react-native-thermal-receipt-printer-image#readme",
+  "homepage": "https://github.com/30SAS/react-native-thermal-receipt-printer#readme",
   "license": "ISC"
 }
