@@ -9,6 +9,7 @@
 #ifndef __PRINTERSDK_H__
 #define __PRINTERSDK_H__
 
+#import <CoreBluetooth/CoreBluetooth.h>
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
@@ -40,6 +41,8 @@ typedef enum CodeBarType
 @end
 
 @interface PrinterSDK : NSObject
+
+@property (nonatomic, strong) CBCentralManager *centralManager;
 
 + (PrinterSDK*)defaultPrinterSDK;
 

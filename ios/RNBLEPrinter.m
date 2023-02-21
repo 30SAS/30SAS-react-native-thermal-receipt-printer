@@ -32,42 +32,47 @@ RCT_EXPORT_METHOD(init:(RCTResponseSenderBlock)successCallback
     m_printer = nil;
 }
 
+
 RCT_EXPORT_METHOD(getDeviceList:(RCTResponseSenderBlock)successCallback
                   fail:(RCTResponseSenderBlock)errorCallback) {
     @try {
-        !_printerArray ? [NSException raise:@"Null pointer exception" format:@"Must call init function first"] : nil;
-        [[[PrinterSDK defaultPrinterSDK] centralManager] scanForPeripheralsWithServices:nil options:nil]; // start scanning for peripherals
-        [[NSNotificationCenter defaultCenter] addObserverForName:CBCentralManagerDidUpdateStateNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-            if ([note.name isEqualToString:CBCentralManagerDidUpdateStateNotification]) {
-                if (@available(iOS 10.0, *)) {
-                    if ([note.userInfo[CBCentralManagerOptionShowPowerAlertKey] boolValue] == YES) {
-                        NSLog(@"CBCentralManagerOptionShowPowerAlertKey is YES");
-                    }
-                }
-                if ([note.object state] == CBCentralManagerStatePoweredOn) { // check if Bluetooth is powered on
-                    [[[PrinterSDK defaultPrinterSDK] centralManager] scanForPeripheralsWithServices:nil options:nil]; // start scanning for peripherals
-                } else {
-                    NSLog(@"Bluetooth is not powered on.");
-                }
-            }
-        }];
-        [[NSNotificationCenter defaultCenter] addObserverForName:PrinterListRefreshedNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-            [_printerArray removeAllObjects];
-            [_printerArray addObjectsFromArray:[[PrinterSDK defaultPrinterSDK] availablePrinters]];
-            NSMutableArray *mapped = [NSMutableArray arrayWithCapacity:[_printerArray count]];
-            [_printerArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                Printer *printer = (Printer*)obj;
-                NSDictionary *dict = @{ @"device_name" : printer.name, @"inner_mac_address" : printer.UUIDString};
-                [mapped addObject:dict];
-            }];
-            NSMutableArray *uniquearray = (NSMutableArray *)[[NSSet setWithArray:mapped] allObjects];
-            successCallback(@[uniquearray]);
-        }];
+        if (!_printerArray) {
+            [NSException raise:@"Null pointer exception" format:@"Must call init function first"];
+        }
+        CBCentralManager *centralManager = [[PrinterSDK defaultPrinterSDK] centralManager];
+        if (centralManager.state == CBManagerStatePoweredOn) {
+            [self scanPrintersWithSuccessCallback:successCallback errorCallback:errorCallback];
+        } else {
+            [self waitForCentralManager:centralManager toBeInState:CBManagerStatePoweredOn beforeScanningPrintersWithSuccessCallback:successCallback errorCallback:errorCallback];
+        }
     } @catch (NSException *exception) {
         errorCallback(@[exception.reason]);
     }
 }
 
+- (void)waitForCentralManager:(CBCentralManager *)centralManager toBeInState:(CBManagerState)state beforeScanningPrintersWithSuccessCallback:(RCTResponseSenderBlock)successCallback errorCallback:(RCTResponseSenderBlock)errorCallback {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (centralManager.state == state) {
+            [self scanPrintersWithSuccessCallback:successCallback errorCallback:errorCallback];
+        } else {
+            [self waitForCentralManager:centralManager toBeInState:state beforeScanningPrintersWithSuccessCallback:successCallback errorCallback:errorCallback];
+        }
+    });
+}
+
+- (void)scanPrintersWithSuccessCallback:(RCTResponseSenderBlock)successCallback errorCallback:(RCTResponseSenderBlock)errorCallback {
+    [[PrinterSDK defaultPrinterSDK] scanPrintersWithCompletion:^(Printer *printer) {
+        if (!_printerArray) {
+            _printerArray = [[NSMutableArray alloc] init];
+        }
+        [_printerArray addObject:printer];
+        NSMutableArray *mapped = [NSMutableArray arrayWithCapacity:[_printerArray count]];
+        [_printerArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {            Printer *printer = (Printer *)obj;            NSDictionary *dict = @{ @"device_name" : printer.name, @"inner_mac_address" : printer.UUIDString};            [mapped addObject:dict];
+        }];
+        NSMutableArray *uniquearray = (NSMutableArray *)[[NSSet setWithArray:mapped] allObjects];;
+        successCallback(@[uniquearray]);
+    }];
+}
 
 RCT_EXPORT_METHOD(connectPrinter:(NSString *)inner_mac_address
                   success:(RCTResponseSenderBlock)successCallback
