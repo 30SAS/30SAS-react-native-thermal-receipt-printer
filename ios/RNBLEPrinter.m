@@ -35,41 +35,39 @@ RCT_EXPORT_METHOD(init:(RCTResponseSenderBlock)successCallback
 RCT_EXPORT_METHOD(getDeviceList:(RCTResponseSenderBlock)successCallback
                   fail:(RCTResponseSenderBlock)errorCallback) {
     @try {
-        if (!_printerArray) {
-            [NSException raise:@"Null pointer exception" format:@"Must call init function first"];
-        }
-        CBCentralManager *centralManager = [PrinterSDK defaultPrinterSDK].centralManager;
-        if (centralManager.state == CBManagerStatePoweredOn) {
-            [self startScanningPrintersWithSuccessCallback:successCallback];
-        } else {
-            [self waitForPoweredOnStateWithCentralManager:centralManager successCallback:successCallback errorCallback:errorCallback];
-        }
+        !_printerArray ? [NSException raise:@"Null pointer exception" format:@"Must call init function first"] : nil;
+        [[[PrinterSDK defaultPrinterSDK] centralManager] scanForPeripheralsWithServices:nil options:nil]; // start scanning for peripherals
+        [[NSNotificationCenter defaultCenter] addObserverForName:CBCentralManagerDidUpdateStateNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            if ([note.name isEqualToString:CBCentralManagerDidUpdateStateNotification]) {
+                if (@available(iOS 10.0, *)) {
+                    if ([note.userInfo[CBCentralManagerOptionShowPowerAlertKey] boolValue] == YES) {
+                        NSLog(@"CBCentralManagerOptionShowPowerAlertKey is YES");
+                    }
+                }
+                if ([note.object state] == CBCentralManagerStatePoweredOn) { // check if Bluetooth is powered on
+                    [[[PrinterSDK defaultPrinterSDK] centralManager] scanForPeripheralsWithServices:nil options:nil]; // start scanning for peripherals
+                } else {
+                    NSLog(@"Bluetooth is not powered on.");
+                }
+            }
+        }];
+        [[NSNotificationCenter defaultCenter] addObserverForName:PrinterListRefreshedNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            [_printerArray removeAllObjects];
+            [_printerArray addObjectsFromArray:[[PrinterSDK defaultPrinterSDK] availablePrinters]];
+            NSMutableArray *mapped = [NSMutableArray arrayWithCapacity:[_printerArray count]];
+            [_printerArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                Printer *printer = (Printer*)obj;
+                NSDictionary *dict = @{ @"device_name" : printer.name, @"inner_mac_address" : printer.UUIDString};
+                [mapped addObject:dict];
+            }];
+            NSMutableArray *uniquearray = (NSMutableArray *)[[NSSet setWithArray:mapped] allObjects];
+            successCallback(@[uniquearray]);
+        }];
     } @catch (NSException *exception) {
         errorCallback(@[exception.reason]);
     }
 }
 
-- (void)startScanningPrintersWithSuccessCallback:(RCTResponseSenderBlock)successCallback {
-    [[PrinterSDK defaultPrinterSDK] scanPrintersWithCompletion:^(Printer* printer){
-        [_printerArray addObject:printer];
-        NSMutableArray *mapped = [NSMutableArray arrayWithCapacity:[_printerArray count]];
-        [_printerArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {            
-            NSDictionary *dict = @{ @"device_name" : printer.name, @"inner_mac_address" : printer.UUIDString};            
-            [mapped addObject:dict];
-        }];
-        NSMutableArray *uniquearray = (NSMutableArray *)[[NSSet setWithArray:mapped] allObjects];;
-        successCallback(@[uniquearray]);
-    }];
-}
-
-- (void)waitForPoweredOnStateWithCentralManager:(CBCentralManager *)centralManager successCallback:(RCTResponseSenderBlock)successCallback errorCallback:(RCTResponseSenderBlock)errorCallback {
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    __block id observer = nil;
-    observer = [[NSNotificationCenter defaultCenter] addObserverForName:CBCentralManagerStatePoweredOn object:nil queue:queue usingBlock:^(NSNotification *note) {
-        [[NSNotificationCenter defaultCenter] removeObserver:observer];
-        [self startScanningPrintersWithSuccessCallback:successCallback];
-    }];
-}
 
 RCT_EXPORT_METHOD(connectPrinter:(NSString *)inner_mac_address
                   success:(RCTResponseSenderBlock)successCallback
