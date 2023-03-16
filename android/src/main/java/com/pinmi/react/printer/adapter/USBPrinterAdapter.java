@@ -79,9 +79,11 @@ public class USBPrinterAdapter implements PrinterAdapter {
                 synchronized (this) {
                     UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                        assert usbDevice != null;
                         Log.i(LOG_TAG, "success to grant permission for device " + usbDevice.getDeviceId() + ", vendor_id: " + usbDevice.getVendorId() + " product_id: " + usbDevice.getProductId());
                         mUsbDevice = usbDevice;
                     } else {
+                        assert usbDevice != null;
                         Toast.makeText(context, "User refuses to obtain USB device permissions" + usbDevice.getDeviceName(), Toast.LENGTH_LONG).show();
                     }
                 }
@@ -105,7 +107,7 @@ public class USBPrinterAdapter implements PrinterAdapter {
     public void init(ReactApplicationContext reactContext, Callback successCallback, Callback errorCallback) {
         this.mContext = reactContext;
         this.mUSBManager = (UsbManager) this.mContext.getSystemService(Context.USB_SERVICE);
-        this.mPermissionIndent = PendingIntent.getBroadcast(mContext, 0, new Intent(ACTION_USB_PERMISSION), PendingIntent.FLAG_IMMUTABLE);
+        this.mPermissionIndent = PendingIntent.getBroadcast(mContext, 0, new Intent(ACTION_USB_PERMISSION), 0);
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
         filter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED);
