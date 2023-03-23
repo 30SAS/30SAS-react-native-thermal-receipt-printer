@@ -187,6 +187,7 @@ public class BLEPrinterAdapter implements PrinterAdapter{
                     printerOutputStream.flush();
                 }catch (IOException e){
                     Log.e(LOG_TAG, "failed to print data" + rawData);
+                    errorCallback.invoke("failed to print data");
                     e.printStackTrace();
                 }
 
@@ -259,6 +260,7 @@ public class BLEPrinterAdapter implements PrinterAdapter{
         } catch (IOException e) {
             Log.e(LOG_TAG, "failed to print data");
             e.printStackTrace();
+            errorCallback.invoke("failed to print data");
         }
     }
 
@@ -305,6 +307,7 @@ public class BLEPrinterAdapter implements PrinterAdapter{
             printerOutputStream.flush();
         } catch (IOException e) {
             Log.e(LOG_TAG, "failed to print data");
+            errorCallback.invoke("failed to print data");
             e.printStackTrace();
         }
     }
