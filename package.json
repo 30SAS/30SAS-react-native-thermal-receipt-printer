@@ -4,15 +4,15 @@
   "description": "Fork of react-native-printer. A React Native Library to support USB/BLE/Net printer",
   "main": "dist/index.js",
   "source": "dist/index.js",
+  "repository": "https://github.com/30SAS/react-native-thermal-receipt-printer",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "pods": "cd example && pod-install --quiet",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn && yarn pods",
     "build": "rimraf ./dist && tsc"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/30SAS/react-native-thermal-receipt-printer.git"
   },
   "files": [
     "dist",
