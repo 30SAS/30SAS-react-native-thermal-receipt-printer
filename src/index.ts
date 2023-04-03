@@ -144,34 +144,37 @@ const USBPrinter = {
       resolve();
     }),
 
-  printText: (text: string, opts: PrinterOptions = {}): Promise<void> =>
-    RNUSBPrinter.printRawData(textTo64Buffer(text, opts), (error: Error) => ({
-      error,
-      hasError: true,
-    })),
+  printText: (
+    text: string,
+    opts: PrinterOptions = {},
+    callbackError?: (error: any) => void
+  ): Promise<void> =>
+    RNUSBPrinter.printRawData(textTo64Buffer(text, opts), callbackError),
 
-  printBill: (text: string, opts: PrinterOptions = {}): void =>
-    RNUSBPrinter.printRawData(billTo64Buffer(text, opts), (error: Error) => ({
-      error,
-      hasError: true,
-    })),
+  printBill: (
+    text: string,
+    opts: PrinterOptions = {},
+    callbackError?: (error: any) => void
+  ): void =>
+    RNUSBPrinter.printRawData(billTo64Buffer(text, opts), callbackError),
   /**
    * image url
    * @param imgUrl
    * @param opts
    */
-  printImage: function (imgUrl: string, opts: PrinterImageOptions = {}) {
+  printImage: function (
+    imgUrl: string,
+    opts: PrinterImageOptions = {},
+    callbackError?: (error: any) => void
+  ) {
     if (Platform.OS === "ios") {
-      RNUSBPrinter.printImageData(imgUrl, opts, (error: Error) => ({
-        error,
-        hasError: true,
-      }));
+      RNUSBPrinter.printImageData(imgUrl, opts, callbackError);
     } else {
       RNUSBPrinter.printImageData(
         imgUrl,
         opts?.imageWidth ?? 0,
         opts?.imageHeight ?? 0,
-        (error: Error) => ({ error, hasError: true })
+        callbackError
       );
     }
   },
@@ -180,18 +183,19 @@ const USBPrinter = {
    * @param Base64
    * @param opts
    */
-  printImageBase64: function (Base64: string, opts: PrinterImageOptions = {}) {
+  printImageBase64: function (
+    Base64: string,
+    opts: PrinterImageOptions = {},
+    callbackError?: (error: any) => void
+  ) {
     if (Platform.OS === "ios") {
-      RNUSBPrinter.printImageBase64(Base64, opts, (error: Error) => ({
-        error,
-        hasError: true,
-      }));
+      RNUSBPrinter.printImageBase64(Base64, opts, callbackError);
     } else {
       RNUSBPrinter.printImageBase64(
         Base64,
         opts?.imageWidth ?? 0,
         opts?.imageHeight ?? 0,
-        (error: Error) => ({ error, hasError: true })
+        callbackError
       );
     }
   },
@@ -199,13 +203,10 @@ const USBPrinter = {
    * android print with encoder
    * @param text
    */
-  printRaw: (text: string): void => {
+  printRaw: (text: string, callbackError?: (error: any) => void): void => {
     if (Platform.OS === "ios") {
     } else {
-      RNUSBPrinter.printRawData(text, (error: Error) => ({
-        error,
-        hasError: true,
-      }));
+      RNUSBPrinter.printRawData(text, callbackError);
     }
   },
   /**
@@ -218,7 +219,8 @@ const USBPrinter = {
     columnWidth: number[],
     columnAliment: ColumnAliment[],
     columnStyle: string[],
-    opts: PrinterOptions = {}
+    opts: PrinterOptions = {},
+    callbackError?: (error: any) => void
   ): void => {
     const result = processColumnText(
       texts,
@@ -226,10 +228,7 @@ const USBPrinter = {
       columnAliment,
       columnStyle
     );
-    RNUSBPrinter.printRawData(textTo64Buffer(result, opts), (error: Error) => ({
-      error,
-      hasError: true,
-    }));
+    RNUSBPrinter.printRawData(textTo64Buffer(result, opts), callbackError);
   },
 };
 
@@ -265,23 +264,28 @@ const BLEPrinter = {
       resolve();
     }),
 
-  printText: (text: string, opts: PrinterOptions = {}): void => {
+  printText: (
+    text: string,
+    opts: PrinterOptions = {},
+    callbackError?: (error: any) => void
+  ): void => {
     if (Platform.OS === "ios") {
       const processedText = textPreprocessingIOS(text, false, false);
       RNBLEPrinter.printRawData(
         processedText.text,
         processedText.opts,
-        (error: Error) => ({ error, hasError: true })
+        callbackError
       );
     } else {
-      RNBLEPrinter.printRawData(textTo64Buffer(text, opts), (error: Error) => ({
-        error,
-        hasError: true,
-      }));
+      RNBLEPrinter.printRawData(textTo64Buffer(text, opts), callbackError);
     }
   },
 
-  printBill: (text: string, opts: PrinterOptions = {}): void => {
+  printBill: (
+    text: string,
+    opts: PrinterOptions = {},
+    callbackError?: (error: any) => void
+  ): void => {
     if (Platform.OS === "ios") {
       const processedText = textPreprocessingIOS(
         text,
@@ -291,13 +295,10 @@ const BLEPrinter = {
       RNBLEPrinter.printRawData(
         processedText.text,
         processedText.opts,
-        (error: Error) => ({ error, hasError: true })
+        callbackError
       );
     } else {
-      RNBLEPrinter.printRawData(billTo64Buffer(text, opts), (error: Error) => ({
-        error,
-        hasError: true,
-      }));
+      RNBLEPrinter.printRawData(billTo64Buffer(text, opts), callbackError);
     }
   },
   /**
@@ -305,21 +306,22 @@ const BLEPrinter = {
    * @param imgUrl
    * @param opts
    */
-  printImage: function (imgUrl: string, opts: PrinterImageOptions = {}) {
+  printImage: function (
+    imgUrl: string,
+    opts: PrinterImageOptions = {},
+    callbackError?: (error: any) => void
+  ) {
     if (Platform.OS === "ios") {
       /**
        * just development
        */
-      RNBLEPrinter.printImageData(imgUrl, opts, (error: Error) => ({
-        error,
-        hasError: true,
-      }));
+      RNBLEPrinter.printImageData(imgUrl, opts, callbackError);
     } else {
       RNBLEPrinter.printImageData(
         imgUrl,
         opts?.imageWidth ?? 0,
         opts?.imageHeight ?? 0,
-        (error: Error) => ({ error, hasError: true })
+        callbackError
       );
     }
   },
@@ -328,15 +330,16 @@ const BLEPrinter = {
    * @param Base64
    * @param opts
    */
-  printImageBase64: function (Base64: string, opts: PrinterImageOptions = {}) {
+  printImageBase64: function (
+    Base64: string,
+    opts: PrinterImageOptions = {},
+    callbackError?: (error: any) => void
+  ) {
     if (Platform.OS === "ios") {
       /**
        * just development
        */
-      RNBLEPrinter.printImageBase64(Base64, opts, (error: Error) => ({
-        error,
-        hasError: true,
-      }));
+      RNBLEPrinter.printImageBase64(Base64, opts, callbackError);
     } else {
       /**
        * just development
@@ -345,7 +348,7 @@ const BLEPrinter = {
         Base64,
         opts?.imageWidth ?? 0,
         opts?.imageHeight ?? 0,
-        (error: Error) => ({ error, hasError: true })
+        callbackError
       );
     }
   },
@@ -353,13 +356,10 @@ const BLEPrinter = {
    * android print with encoder
    * @param text
    */
-  printRaw: (text: string): void => {
+  printRaw: (text: string, callbackError?: (error: any) => void): void => {
     if (Platform.OS === "ios") {
     } else {
-      RNBLEPrinter.printRawData(text, (error: Error) => ({
-        error,
-        hasError: true,
-      }));
+      RNBLEPrinter.printRawData(text, callbackError);
     }
   },
   /**
@@ -372,7 +372,8 @@ const BLEPrinter = {
     columnWidth: number[],
     columnAliment: ColumnAliment[],
     columnStyle: string[],
-    opts: PrinterOptions = {}
+    opts: PrinterOptions = {},
+    callbackError?: (error: any) => void
   ): void => {
     const result = processColumnText(
       texts,
@@ -385,13 +386,10 @@ const BLEPrinter = {
       RNBLEPrinter.printRawData(
         processedText.text,
         processedText.opts,
-        (error: Error) => ({ error, hasError: true })
+        callbackError
       );
     } else {
-      RNBLEPrinter.printRawData(
-        textTo64Buffer(result, opts),
-        (error: Error) => ({ error, hasError: true })
-      );
+      RNBLEPrinter.printRawData(textTo64Buffer(result, opts), callbackError);
     }
   },
 };
