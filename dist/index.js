@@ -1,5 +1,5 @@
 var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
+    __assign = Object.assign || function (t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
             s = arguments[i];
             for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
@@ -19,8 +19,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function () { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function () { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -132,16 +132,16 @@ var USBPrinter = {
             resolve();
         });
     },
-    printText: function (text, opts) {
+    printText: function (text, opts, callbackError) {
         if (opts === void 0) { opts = {}; }
         return RNUSBPrinter.printRawData(textTo64Buffer(text, opts), function (error) {
-            return console.warn(error);
+            callbackError(error);
         });
     },
-    printBill: function (text, opts) {
+    printBill: function (text, opts, callbackError) {
         if (opts === void 0) { opts = {}; }
         return RNUSBPrinter.printRawData(billTo64Buffer(text, opts), function (error) {
-            return console.warn(error);
+            callbackError(error);
         });
     },
     /**
@@ -149,14 +149,14 @@ var USBPrinter = {
      * @param imgUrl
      * @param opts
      */
-    printImage: function (imgUrl, opts) {
+    printImage: function (imgUrl, opts, callbackError) {
         var _a, _b;
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
-            RNUSBPrinter.printImageData(imgUrl, opts, function (error) { return console.warn(error); });
+            RNUSBPrinter.printImageData(imgUrl, opts, function (error) { return callbackError(error); });
         }
         else {
-            RNUSBPrinter.printImageData(imgUrl, (_a = opts === null || opts === void 0 ? void 0 : opts.imageWidth) !== null && _a !== void 0 ? _a : 0, (_b = opts === null || opts === void 0 ? void 0 : opts.imageHeight) !== null && _b !== void 0 ? _b : 0, function (error) { return console.warn(error); });
+            RNUSBPrinter.printImageData(imgUrl, (_a = opts === null || opts === void 0 ? void 0 : opts.imageWidth) !== null && _a !== void 0 ? _a : 0, (_b = opts === null || opts === void 0 ? void 0 : opts.imageHeight) !== null && _b !== void 0 ? _b : 0, function (error) { return callbackError(error); });
         }
     },
     /**
@@ -164,26 +164,26 @@ var USBPrinter = {
      * @param Base64
      * @param opts
      */
-    printImageBase64: function (Base64, opts) {
+    printImageBase64: function (Base64, opts, callbackError) {
         var _a, _b;
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
-            RNUSBPrinter.printImageBase64(Base64, opts, function (error) { return console.warn(error); });
+            RNUSBPrinter.printImageBase64(Base64, opts, function (error) { return callbackError(error); });
         }
         else {
-            RNUSBPrinter.printImageBase64(Base64, (_a = opts === null || opts === void 0 ? void 0 : opts.imageWidth) !== null && _a !== void 0 ? _a : 0, (_b = opts === null || opts === void 0 ? void 0 : opts.imageHeight) !== null && _b !== void 0 ? _b : 0, function (error) { return console.warn(error); });
+            RNUSBPrinter.printImageBase64(Base64, (_a = opts === null || opts === void 0 ? void 0 : opts.imageWidth) !== null && _a !== void 0 ? _a : 0, (_b = opts === null || opts === void 0 ? void 0 : opts.imageHeight) !== null && _b !== void 0 ? _b : 0, function (error) { return callbackError(error); });
         }
     },
     /**
      * android print with encoder
      * @param text
      */
-    printRaw: function (text) {
+    printRaw: function (text, callbackError) {
         if (Platform.OS === "ios") {
         }
         else {
             RNUSBPrinter.printRawData(text, function (error) {
-                return console.warn(error);
+                return callbackError(error);
             });
         }
     },
@@ -192,11 +192,11 @@ var USBPrinter = {
      * 80mm => 46 character
      * 58mm => 30 character
      */
-    printColumnsText: function (texts, columnWidth, columnAliment, columnStyle, opts) {
+    printColumnsText: function (texts, columnWidth, columnAliment, columnStyle, opts, callbackError) {
         if (opts === void 0) { opts = {}; }
         var result = processColumnText(texts, columnWidth, columnAliment, columnStyle);
         RNUSBPrinter.printRawData(textTo64Buffer(result, opts), function (error) {
-            return console.warn(error);
+            return callbackError(error);
         });
     },
 };
@@ -222,28 +222,28 @@ var BLEPrinter = {
             resolve();
         });
     },
-    printText: function (text, opts) {
+    printText: function (text, opts, callbackError) {
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
             var processedText = textPreprocessingIOS(text, false, false);
-            RNBLEPrinter.printRawData(processedText.text, processedText.opts, function (error) { return console.warn(error); });
+            RNBLEPrinter.printRawData(processedText.text, processedText.opts, function (error) { return callbackError(error); });
         }
         else {
             RNBLEPrinter.printRawData(textTo64Buffer(text, opts), function (error) {
-                return console.warn(error);
+                return callbackError(error);
             });
         }
     },
-    printBill: function (text, opts) {
+    printBill: function (text, opts, callbackError) {
         var _a, _b;
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
             var processedText = textPreprocessingIOS(text, (_a = opts === null || opts === void 0 ? void 0 : opts.cut) !== null && _a !== void 0 ? _a : true, (_b = opts.beep) !== null && _b !== void 0 ? _b : true);
-            RNBLEPrinter.printRawData(processedText.text, processedText.opts, function (error) { return console.warn(error); });
+            RNBLEPrinter.printRawData(processedText.text, processedText.opts, function (error) { return callbackError(error); });
         }
         else {
             RNBLEPrinter.printRawData(billTo64Buffer(text, opts), function (error) {
-                return console.warn(error);
+                return callbackError(error);
             });
         }
     },
@@ -252,17 +252,17 @@ var BLEPrinter = {
      * @param imgUrl
      * @param opts
      */
-    printImage: function (imgUrl, opts) {
+    printImage: function (imgUrl, opts, callbackError) {
         var _a, _b;
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
             /**
              * just development
              */
-            RNBLEPrinter.printImageData(imgUrl, opts, function (error) { return console.warn(error); });
+            RNBLEPrinter.printImageData(imgUrl, opts, function (error) { return callbackError(error); });
         }
         else {
-            RNBLEPrinter.printImageData(imgUrl, (_a = opts === null || opts === void 0 ? void 0 : opts.imageWidth) !== null && _a !== void 0 ? _a : 0, (_b = opts === null || opts === void 0 ? void 0 : opts.imageHeight) !== null && _b !== void 0 ? _b : 0, function (error) { return console.warn(error); });
+            RNBLEPrinter.printImageData(imgUrl, (_a = opts === null || opts === void 0 ? void 0 : opts.imageWidth) !== null && _a !== void 0 ? _a : 0, (_b = opts === null || opts === void 0 ? void 0 : opts.imageHeight) !== null && _b !== void 0 ? _b : 0, function (error) { return callbackError(error); });
         }
     },
     /**
@@ -270,32 +270,32 @@ var BLEPrinter = {
      * @param Base64
      * @param opts
      */
-    printImageBase64: function (Base64, opts) {
+    printImageBase64: function (Base64, opts, callbackError) {
         var _a, _b;
         if (opts === void 0) { opts = {}; }
         if (Platform.OS === "ios") {
             /**
              * just development
              */
-            RNBLEPrinter.printImageBase64(Base64, opts, function (error) { return console.warn(error); });
+            RNBLEPrinter.printImageBase64(Base64, opts, function (error) { return callbackError(error); });
         }
         else {
             /**
              * just development
              */
-            RNBLEPrinter.printImageBase64(Base64, (_a = opts === null || opts === void 0 ? void 0 : opts.imageWidth) !== null && _a !== void 0 ? _a : 0, (_b = opts === null || opts === void 0 ? void 0 : opts.imageHeight) !== null && _b !== void 0 ? _b : 0, function (error) { return console.warn(error); });
+            RNBLEPrinter.printImageBase64(Base64, (_a = opts === null || opts === void 0 ? void 0 : opts.imageWidth) !== null && _a !== void 0 ? _a : 0, (_b = opts === null || opts === void 0 ? void 0 : opts.imageHeight) !== null && _b !== void 0 ? _b : 0, function (error) { return callbackError(error); });
         }
     },
     /**
      * android print with encoder
      * @param text
      */
-    printRaw: function (text) {
+    printRaw: function (text, callbackError) {
         if (Platform.OS === "ios") {
         }
         else {
             RNBLEPrinter.printRawData(text, function (error) {
-                return console.warn(error);
+                return callbackError(error);
             });
         }
     },
@@ -304,16 +304,16 @@ var BLEPrinter = {
      * 80mm => 46 character
      * 58mm => 30 character
      */
-    printColumnsText: function (texts, columnWidth, columnAliment, columnStyle, opts) {
+    printColumnsText: function (texts, columnWidth, columnAliment, columnStyle, opts, callbackError) {
         if (opts === void 0) { opts = {}; }
         var result = processColumnText(texts, columnWidth, columnAliment, columnStyle);
         if (Platform.OS === "ios") {
             var processedText = textPreprocessingIOS(result, false, false);
-            RNBLEPrinter.printRawData(processedText.text, processedText.opts, function (error) { return console.warn(error); });
+            RNBLEPrinter.printRawData(processedText.text, processedText.opts, function (error) { return callbackError(error); });
         }
         else {
             RNBLEPrinter.printRawData(textTo64Buffer(result, opts), function (error) {
-                return console.warn(error);
+                return callbackError(error);
             });
         }
     },
@@ -330,25 +330,27 @@ var NetPrinter = {
         });
     },
     connectPrinter: function (host, port, timeout) {
-        return new Promise(function (resolve, reject) { return __awaiter(void 0, void 0, void 0, function () {
-            var error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, connectToHost(host, timeout)];
-                    case 1:
-                        _a.sent();
-                        RNNetPrinter.connectPrinter(host, port, function (printer) { return resolve(printer); }, function (error) { return reject(error); });
-                        return [3 /*break*/, 3];
-                    case 2:
-                        error_1 = _a.sent();
-                        reject((error_1 === null || error_1 === void 0 ? void 0 : error_1.message) || "Connect to ".concat(host, " fail"));
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
+        return new Promise(function (resolve, reject) {
+            return __awaiter(void 0, void 0, void 0, function () {
+                var error_1;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _a.trys.push([0, 2, , 3]);
+                            return [4 /*yield*/, connectToHost(host, timeout)];
+                        case 1:
+                            _a.sent();
+                            RNNetPrinter.connectPrinter(host, port, function (printer) { return resolve(printer); }, function (error) { return reject(error); });
+                            return [3 /*break*/, 3];
+                        case 2:
+                            error_1 = _a.sent();
+                            reject((error_1 === null || error_1 === void 0 ? void 0 : error_1.message) || "Connect to ".concat(host, " fail"));
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/];
+                    }
+                });
             });
-        }); });
+        });
     },
     closeConn: function () {
         return new Promise(function (resolve) {
