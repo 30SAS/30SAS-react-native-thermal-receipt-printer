@@ -105,7 +105,7 @@ react-native link @30SAS/react-native-thermal-receipt-printer
 import {
   COMMANDS,
   ColumnAlignment,
-} from "react-native-thermal-receipt-printer-image-qr";
+} from "@30SAS/react-native-thermal-receipt-printer";
 ```
 
 [See more here](https://github.com/30SAS/react-native-thermal-receipt-printer/blob/main/dist/utils/printer-commands.js)
