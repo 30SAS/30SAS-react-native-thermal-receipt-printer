@@ -39,14 +39,14 @@ A React Native Library to support USB/BLE/Net printer, and the implementation of
 ## Installation
 
 ```
-npm i react-native-thermal-receipt-printer-image-qr
+npm i @30SAS/react-native-thermal-receipt-printer
 npm i react-native-ping
 ```
 
 or
 
 ```
-yarn add react-native-thermal-receipt-printer-image-qr
+yarn add @30SAS/react-native-thermal-receipt-printer
 yarn add react-native-ping
 ```
 
@@ -57,7 +57,7 @@ next step
 cd ios && pod install
 
 # RN < 0.60
-react-native link react-native-thermal-receipt-printer-image-qr
+react-native link @30SAS/react-native-thermal-receipt-printer
 ```
 
 ## API Reference
@@ -108,7 +108,7 @@ import {
 } from "react-native-thermal-receipt-printer-image-qr";
 ```
 
-[See more here](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr/blob/main/dist/utils/printer-commands.js)
+[See more here](https://github.com/30SAS/react-native-thermal-receipt-printer/blob/main/dist/utils/printer-commands.js)
 
 ## Example
 
@@ -163,7 +163,7 @@ Printer.printImage(
 );
 ```
 
-[See more here](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr/blob/main/example/src/HomeScreen.tsx)
+[See more here](https://github.com/30SAS/react-native-thermal-receipt-printer/blob/main/example/src/HomeScreen.tsx)
 
 ## Troubleshoot
 
