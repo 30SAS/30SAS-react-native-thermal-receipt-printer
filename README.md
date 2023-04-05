@@ -108,7 +108,7 @@ import {
 } from "@30SAS/react-native-thermal-receipt-printer";
 ```
 
-[See more here](https://github.com/30SAS/react-native-thermal-receipt-printer/blob/master/dist/utils/print-column.js)
+[See more here](https://github.com/30SAS/react-native-thermal-receipt-printer/blob/master/dist/utils/printer-commands.js)
 
 ## Example
 
