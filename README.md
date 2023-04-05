@@ -3,23 +3,177 @@
 Fork of `react-native-printer` and add implement for auto connect printer with usb
 A React Native Library to support USB/BLE/Net printer
 
-![Node.js Package](https://github.com/HeligPfleigh/react-native-thermal-receipt-printer/workflows/Node.js%20Package/badge.svg)
+### ANDROID ONLY (For now, I still have to solve some bugs in iOS).
+
+Fork of `react-native-thermal-receipt-printer`, implement auto connect printer with usb
+A React Native Library to support USB/BLE/Net printer, and the implementation of functions added in the following library: [react-native-thermal-receipt-printer-image-qr](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr) (Library with some bugs).
+
+- I forked this for my quickly project, this is not the official project.
+- Fork of [`react-native-thermal-receipt-printer`](https://www.npmjs.com/package/react-native-thermal-receipt-printer) and add implement :
+  <br />
+
+
+| Implement                 | Android            | IOS                |
+| ------------------------- | ------------------ | ------------------ |
+| Image & QR (URL & Base64) | :heavy_check_mark: | :heavy_check_mark: |
+| Fix cut                   | :heavy_check_mark: | :heavy_check_mark: |
+| Print With Column         | :heavy_check_mark: | :heavy_check_mark: |
+| NET Connect Timeout       | :heavy_check_mark: | :heavy_check_mark: |
+
+:grey_exclamation:**`Print Image & QR with bluetooth in IOS just implement not tested yet`**
+
+## Support
+
+| Printer    | Android            | IOS                |
+| ---------- | ------------------ | ------------------ |
+| USBPrinter | :heavy_check_mark: |                    |
+| BLEPrinter | :heavy_check_mark: | :heavy_check_mark: |
+| NetPrinter | :heavy_check_mark: | :heavy_check_mark: |
+
+<br />
+<div style="display: flex; flex-direction: row; align-self: center; align-items: center">
+<img src="image/invoice.jpg" alt="bill" width="270" height="580"/>
+<img src="image/_screenshot.jpg" alt="screenshot" width="270" height="580"/>
+</div>
 
 ## Installation
 
 ```
-yarn add react-native-thermal-receipt-printer
+npm i @30SAS/react-native-thermal-receipt-printer
+npm i react-native-ping
 ```
+
+or
+
+```
+yarn add @30SAS/react-native-thermal-receipt-printer
+yarn add react-native-ping
+```
+
+next step
+
+```
+# RN >= 0.60
+cd ios && pod install
+
+# RN < 0.60
+react-native link @30SAS/react-native-thermal-receipt-printer
+```
+
+## API Reference
+
+```tsx
+    init: () => Promise;
+    getDeviceList: () => Promise;
+    /**
+     * `timeout`
+     * @default 4000ms
+     */
+    connectPrinter: (host: string, port: number, timeout?: number | undefined) => Promise;
+    closeConn: () => Promise;
+    /**
+     * Print text
+     */
+    printText: (text: string, opts?: {}) => void;
+    /**
+     * Print text & end the bill & cut
+     */
+    printBill: (text: string, opts?: PrinterOptions) => void;
+    /**
+     * print with image url
+     */
+    printImage: (imgUrl: string, opts?: PrinterImageOptions) => void;
+    /**
+     * Base 64 string
+     */
+    printImageBase64: (Base64: string, opts?: PrinterImageOptions) => void;
+    /**
+     * Only android print with encoder
+     */
+    printRaw: (text: string) => void;
+    /**
+     * print column
+     * 80mm => 46 character
+     * 58mm => 30 character
+     */
+    printColumnsText: (texts: string[], columnWidth: number[], columnAlignment: ColumnAlignment[], columnStyle?: string[], opts?: PrinterOptions) => void;
+```
+
+## Styling
+
+```js
+import {
+  COMMANDS,
+  ColumnAlignment,
+} from "@30SAS/react-native-thermal-receipt-printer";
+```
+
+[See more here](https://github.com/30SAS/react-native-thermal-receipt-printer/blob/master/dist/utils/printer-commands.js)
+
+## Example
+
+**`Print Columns Text`**
+
+```tsx
+const BOLD_ON = COMMANDS.TEXT_FORMAT.TXT_BOLD_ON;
+const BOLD_OFF = COMMANDS.TEXT_FORMAT.TXT_BOLD_OFF;
+let orderList = [
+  ["1. Skirt Palas Labuh Muslimah Fashion", "x2", "500$"],
+  ["2. BLOUSE ROPOL VIRAL MUSLIMAH FASHION", "x4222", "500$"],
+  [
+    "3. Women Crew Neck Button Down Ruffle Collar Loose Blouse",
+    "x1",
+    "30000000000000$",
+  ],
+  ["4. Retro Buttons Up Full Sleeve Loose", "x10", "200$"],
+  ["5. Retro Buttons Up", "x10", "200$"],
+];
+let columnAlignment = [
+  ColumnAlignment.LEFT,
+  ColumnAlignment.CENTER,
+  ColumnAlignment.RIGHT,
+];
+let columnWidth = [46 - (7 + 12), 7, 12];
+const header = ["Product list", "Qty", "Price"];
+Printer.printColumnsText(header, columnWidth, columnAlignment, [
+  `${BOLD_ON}`,
+  "",
+  "",
+]);
+for (let i in orderList) {
+  Printer.printColumnsText(orderList[i], columnWidth, columnAlignment, [
+    `${BOLD_OFF}`,
+    "",
+    "",
+  ]);
+}
+Printer.printBill(`${CENTER}Thank you\n`);
+```
+
+**`Print image`**
+
+```tsx
+Printer.printImage(
+  "https://media-cdn.tripadvisor.com/media/photo-m/1280/1b/3a/bd/b5/the-food-bill.jpg",
+  {
+    imageWidth: 575,
+    // imageHeight: 1000,
+    // paddingX: 100
+  }
+);
+```
+
+[See more here](https://github.com/30SAS/react-native-thermal-receipt-printer/blob/master/example/src/HomeScreen.tsx)
 
 ## Troubleshoot
 
-- when install in `react-native` version >= 0.60, xcode show this error
+- When installing `react-native` version >= 0.60, XCode shows this error:
 
 ```
 duplicate symbols for architecture x86_64
 ```
 
-that because the .a library uses [CocoaAsyncSocket](https://github.com/robbiehanson/CocoaAsyncSocket) library and Flipper uses it too
+That's because the .a library uses [CocoaAsyncSocket](https://github.com/robbiehanson/CocoaAsyncSocket) library and Flipper uses it too.
 
 _Podfile_
 
@@ -39,245 +193,3 @@ _Podfile_
 ```
 
 and comment out code related to Flipper in `ios/AppDelegate.m`
-
-## Support
-
-| Printer    | Android            | IOS                |
-| ---------- | ------------------ | ------------------ |
-| USBPrinter | :heavy_check_mark: |                    |
-| BLEPrinter | :heavy_check_mark: | :heavy_check_mark: |
-| NetPrinter | :heavy_check_mark: | :heavy_check_mark: |
-
-## Predefined tag
-| Tags          | Description           |
-|:-------------:|:---------------------:|
-| C             | Center                |
-| D             | Medium font           |
-| B             | Large font            |
-| M             | Medium font           |
-| CM            | Medium font, centered |
-| CB            | Medium font, centered |
-| CD            | Large font, centered  |
-
-## Development workflow
-
-To get started with the project, run `yarn bootstrap` in the root directory to install the required dependencies for each package:
-
-```sh
-yarn bootstrap
-```
-
-While developing, you can run the [example app](/example/) to test your changes.
-
-To start the packager:
-
-```sh
-yarn example start
-```
-
-To run the example app on Android:
-
-```sh
-yarn example dev-android
-```
-
-To run the example app on iOS:
-
-```sh
-yarn example ios
-```
-
-## Usage
-
-```javascript
-import {
-  USBPrinter,
-  NetPrinter,
-  BLEPrinter,
-} from "react-native-thermal-receipt-printer";
-
-USBPrinter.printText("<C>sample text</C>");
-USBPrinter.printBill("<C>sample bill</C>");
-```
-
-## Example
-
-### USBPrinter (only support android)
-
-```typescript
-interface IUSBPrinter {
-  device_name: string;
-  vendor_id: number;
-  product_id: number;
-}
-```
-
-```javascript
-  const [printers, setPrinters] = useState([]);
-  const [currentPrinter, setCurrentPrinter] = useState();
-
-  useEffect = () => {
-    if(Platform.OS == 'android'){
-      USBPrinter.init().then(()=> {
-        //list printers
-        USBPrinter.getDeviceList().then(setPrinters);
-      })
-    }
-  }
-
-  const _connectPrinter = (printer) => USBPrinter.connectPrinter(printer.vendorID, printer.productId).then(() => setCurrentPrinter(printer))
-
-  const printTextTest = () => {
-    currentPrinter && USBPrinter.printText("<C>sample text</C>\n");
-  }
-
-  const printBillTest = () => {
-    currentPrinter && USBPrinter.printBill("<C>sample bill</C>");
-  }
-
-  ...
-
-  return (
-    <View style={styles.container}>
-      {
-        printers.map(printer => (
-          <TouchableOpacity key={printer.device_id} onPress={() => _connectPrinter(printer)}>
-            {`device_name: ${printer.device_name}, device_id: ${printer.device_id}, vendor_id: ${printer.vendor_id}, product_id: ${printer.product_id}`}
-          </TouchableOpacity>
-          ))
-      }
-      <TouchableOpacity onPress={printTextTest}>
-        <Text>Print Text</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={printBillTest}>
-        <Text>Print Bill Text</Text>
-      </TouchableOpacity>
-    </View>
-  )
-
-  ...
-
-```
-
-### BLEPrinter
-
-```typescript
-interface IBLEPrinter {
-  device_name: string;
-  inner_mac_address: string;
-}
-```
-
-```javascript
-  const [printers, setPrinters] = useState([]);
-  const [currentPrinter, setCurrentPrinter] = useState();
-
-  useEffect(() => {
-    BLEPrinter.init().then(()=> {
-      BLEPrinter.getDeviceList().then(setPrinters);
-    });
-  }, []);
-
-  _connectPrinter => (printer) => {
-    //connect printer
-    BLEPrinter.connectPrinter(printer.inner_mac_address).then(
-      setCurrentPrinter,
-      error => console.warn(error))
-  }
-
-  printTextTest = () => {
-    currentPrinter && USBPrinter.printText("<C>sample text</C>\n");
-  }
-
-  printBillTest = () => {
-    currentPrinter && USBPrinter.printBill("<C>sample bill</C>");
-  }
-
-  ...
-
-  return (
-    <View style={styles.container}>
-      {
-        this.state.printers.map(printer => (
-          <TouchableOpacity key={printer.inner_mac_address} onPress={() => _connectPrinter(printer)}>
-            {`device_name: ${printer.device_name}, inner_mac_address: ${printer.inner_mac_address}`}
-          </TouchableOpacity>
-          ))
-      }
-      <TouchableOpacity onPress={printTextTest}>
-        <Text>Print Text</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={printBillTest}>
-        <Text>Print Bill Text</Text>
-      </TouchableOpacity>
-    </View>
-  )
-
-  ...
-
-```
-
-### NetPrinter
-
-```typescript
-interface INetPrinter {
-  device_name: string;
-  host: string;
-  port: number;
-}
-```
-
-_Note:_ get list device for net printers is support scanning in local ip but not recommended
-
-```javascript
-
-  componentDidMount = () => {
-    NetPrinter.init().then(() => {
-      this.setState(Object.assign({}, this.state, {printers: [{host: '192.168.10.241', port: 9100}]}))
-      })
-  }
-
-  _connectPrinter => (host, port) => {
-    //connect printer
-    NetPrinter.connectPrinter(host, port).then(
-      (printer) => this.setState(Object.assign({}, this.state, {currentPrinter: printer})),
-      error => console.warn(error))
-}
-
-  printTextTest = () => {
-    if (this.state.currentPrinter) {
-      NetPrinter.printText("<C>sample text</C>\n");
-    }
-  }
-
-  printBillTest = () => {
-    if(this.state.currentPrinter) {
-      NetPrinter.printBill("<C>sample bill</C>");
-    }
-  }
-
-  ...
-
-  render() {
-    return (
-      <View style={styles.container}>
-        {
-          this.state.printers.map(printer => (
-            <TouchableOpacity key={printer.device_id} onPress={(printer) => this._connectPrinter(printer.host, printer.port)}>
-              {`device_name: ${printer.device_name}, host: ${printer.host}, port: ${printer.port}`}
-            </TouchableOpacity>
-            ))
-        }
-        <TouchableOpacity onPress={() => this.printTextTest()}>
-          <Text> Print Text </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.printBillTest()}>
-          <Text> Print Bill Text </Text>
-        </TouchableOpacity>
-      </View>
-    )
-  }
-
-  ...
-
-```
