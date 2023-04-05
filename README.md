@@ -1,64 +1,24 @@
 # react-native-thermal-receipt-printer
 
+Fork of `react-native-printer` and add implement for auto connect printer with usb
+A React Native Library to support USB/BLE/Net printer
 
-### It is not yet a stable version of the library, I am working on the first stable version. 
-#### ANDROID ONLY (For now, I still have to solve some bugs in iOS).
-
+### ANDROID ONLY (For now, I still have to solve some bugs in iOS).
 
 Fork of `react-native-thermal-receipt-printer`, implement auto connect printer with usb
 A React Native Library to support USB/BLE/Net printer, and the implementation of functions added in the following library: [react-native-thermal-receipt-printer-image-qr](https://github.com/thiendangit/react-native-thermal-receipt-printer-image-qr) (Library with some bugs).
 
-![Node.js Package](https://github.com/30SAS/react-native-thermal-receipt-printer/workflows/Node.js%20Package/badge.svg)
+- I forked this for my quickly project, this is not the official project.
+- Fork of [`react-native-thermal-receipt-printer`](https://www.npmjs.com/package/react-native-thermal-receipt-printer) and add implement :
+  <br />
 
-## Installation
-```
-yarn add @30SAS-react-native-thermal-receipt-printer
-yarn add react-native-ping
-```
-next step
-```
-# RN >= 0.60
-cd ios && pod install
 
-# RN < 0.60
-react-native link react-native-thermal-receipt-printer-image-qr
-```
-
-## Troubleshoot
-
-- when install in `react-native` version >= 0.60, xcode show this error
-
-```
-duplicate symbols for architecture x86_64
-```
-
-that because the .a library uses [CocoaAsyncSocket](https://github.com/robbiehanson/CocoaAsyncSocket) library and Flipper uses it too
-
-_Podfile_
-
-```diff
-...
-  use_native_modules!
-
-  # Enables Flipper.
-  #
-  # Note that if you have use_frameworks! enabled, Flipper will not work and
-  # you should disable these next few lines.
-  # add_flipper_pods!
-  # post_install do |installer|
-  #   flipper_post_install(installer)
-  # end
-...
-```
-
-and comment out code related to Flipper in `ios/AppDelegate.m`
-
-| Implement    | Android            | IOS                |
-| ---------- | ------------------ | ------------------ |
+| Implement                 | Android            | IOS                |
+| ------------------------- | ------------------ | ------------------ |
 | Image & QR (URL & Base64) | :heavy_check_mark: | :heavy_check_mark: |
-| Fix cut | :heavy_check_mark: | :heavy_check_mark: |
-| Print With Column | :heavy_check_mark: | :heavy_check_mark: |
-| NET Connect Timeout | :heavy_check_mark: | :heavy_check_mark: |
+| Fix cut                   | :heavy_check_mark: | :heavy_check_mark: |
+| Print With Column         | :heavy_check_mark: | :heavy_check_mark: |
+| NET Connect Timeout       | :heavy_check_mark: | :heavy_check_mark: |
 
 :grey_exclamation:**`Print Image & QR with bluetooth in IOS just implement not tested yet`**
 
@@ -76,35 +36,32 @@ and comment out code related to Flipper in `ios/AppDelegate.m`
 <img src="image/_screenshot.jpg" alt="screenshot" width="270" height="580"/>
 </div>
 
-## Development workflow
+## Installation
 
-To get started with the project, run `yarn bootstrap` in the root directory to install the required dependencies for each package:
-
-```sh
-yarn bootstrap
+```
+npm i @30SAS/react-native-thermal-receipt-printer
+npm i react-native-ping
 ```
 
-While developing, you can run the [example app](/example/) to test your changes.
+or
 
-To start the packager:
-
-```sh
-yarn example start
+```
+yarn add @30SAS/react-native-thermal-receipt-printer
+yarn add react-native-ping
 ```
 
-To run the example app on Android:
+next step
 
-```sh
-yarn example dev-android
 ```
+# RN >= 0.60
+cd ios && pod install
 
-To run the example app on iOS:
-
-```sh
-yarn example ios
+# RN < 0.60
+react-native link @30SAS/react-native-thermal-receipt-printer
 ```
 
 ## API Reference
+
 ```tsx
     init: () => Promise;
     getDeviceList: () => Promise;
@@ -139,46 +96,100 @@ yarn example ios
      * 80mm => 46 character
      * 58mm => 30 character
      */
-    printColumnsText: (texts: string[], columnWidth: number[], columnAliment: ColumnAliment[], columnStyle?: string[], opts?: PrinterOptions) => void;
+    printColumnsText: (texts: string[], columnWidth: number[], columnAlignment: ColumnAlignment[], columnStyle?: string[], opts?: PrinterOptions) => void;
 ```
 
 ## Styling
+
 ```js
 import {
-  COMMANDS
-} from 'react-native-thermal-receipt-printer-qr-image';
+  COMMANDS,
+  ColumnAlignment,
+} from "@30SAS/react-native-thermal-receipt-printer";
 ```
-[See more here](https://github.com/30SAS/30SAS-react-native-thermal-receipt-printer/blob/main/dist/utils/printer-commands.js)
+
+[See more here](https://github.com/30SAS/react-native-thermal-receipt-printer/dist/utils/printer-commands.js)
 
 ## Example
 
 **`Print Columns Text`**
+
 ```tsx
 const BOLD_ON = COMMANDS.TEXT_FORMAT.TXT_BOLD_ON;
 const BOLD_OFF = COMMANDS.TEXT_FORMAT.TXT_BOLD_OFF;
 let orderList = [
   ["1. Skirt Palas Labuh Muslimah Fashion", "x2", "500$"],
   ["2. BLOUSE ROPOL VIRAL MUSLIMAH FASHION", "x4222", "500$"],
-  ["3. Women Crew Neck Button Down Ruffle Collar Loose Blouse", "x1", "30000000000000$"],
+  [
+    "3. Women Crew Neck Button Down Ruffle Collar Loose Blouse",
+    "x1",
+    "30000000000000$",
+  ],
   ["4. Retro Buttons Up Full Sleeve Loose", "x10", "200$"],
   ["5. Retro Buttons Up", "x10", "200$"],
 ];
-let columnAliment = [ColumnAliment.LEFT, ColumnAliment.CENTER, ColumnAliment.RIGHT];
-let columnWidth = [46 - (7 + 12), 7, 12]
-const header = ['Product list', 'Qty', 'Price']
-Printer.printColumnsText(header, columnWidth, columnAliment, [`${BOLD_ON}`, '', '']);
+let columnAlignment = [
+  ColumnAlignment.LEFT,
+  ColumnAlignment.CENTER,
+  ColumnAlignment.RIGHT,
+];
+let columnWidth = [46 - (7 + 12), 7, 12];
+const header = ["Product list", "Qty", "Price"];
+Printer.printColumnsText(header, columnWidth, columnAlignment, [
+  `${BOLD_ON}`,
+  "",
+  "",
+]);
 for (let i in orderList) {
-  Printer.printColumnsText(orderList[i], columnWidth, columnAliment, [`${BOLD_OFF}`, '', '']);
+  Printer.printColumnsText(orderList[i], columnWidth, columnAlignment, [
+    `${BOLD_OFF}`,
+    "",
+    "",
+  ]);
 }
 Printer.printBill(`${CENTER}Thank you\n`);
 ```
 
 **`Print image`**
+
 ```tsx
-Printer.printImage('https://media-cdn.tripadvisor.com/media/photo-m/1280/1b/3a/bd/b5/the-food-bill.jpg', {
-imageWidth: 575,
-// imageHeight: 1000,
-// paddingX: 100
-})
+Printer.printImage(
+  "https://media-cdn.tripadvisor.com/media/photo-m/1280/1b/3a/bd/b5/the-food-bill.jpg",
+  {
+    imageWidth: 575,
+    // imageHeight: 1000,
+    // paddingX: 100
+  }
+);
 ```
-[See more here](https://github.com/30SAS/30SAS-react-native-thermal-receipt-printer/blob/main/example/src/HomeScreen.tsx)
+
+[See more here](https://github.com/30SAS/react-native-thermal-receipt-printer/example/src/HomeScreen.tsx)
+
+## Troubleshoot
+
+- When installing `react-native` version >= 0.60, XCode shows this error:
+
+```
+duplicate symbols for architecture x86_64
+```
+
+That's because the .a library uses [CocoaAsyncSocket](https://github.com/robbiehanson/CocoaAsyncSocket) library and Flipper uses it too.
+
+_Podfile_
+
+```diff
+...
+  use_native_modules!
+
+  # Enables Flipper.
+  #
+  # Note that if you have use_frameworks! enabled, Flipper will not work and
+  # you should disable these next few lines.
+  # add_flipper_pods!
+  # post_install do |installer|
+  #   flipper_post_install(installer)
+  # end
+...
+```
+
+and comment out code related to Flipper in `ios/AppDelegate.m`
