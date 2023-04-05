@@ -108,7 +108,7 @@ import {
 } from "@30SAS/react-native-thermal-receipt-printer";
 ```
 
-[See more here](https://github.com/30SAS/react-native-thermal-receipt-printer/blob/main/dist/utils/printer-commands.js)
+[See more here](https://github.com/30SAS/react-native-thermal-receipt-printer/dist/utils/printer-commands.js)
 
 ## Example
 
@@ -163,7 +163,7 @@ Printer.printImage(
 );
 ```
 
-[See more here](https://github.com/30SAS/react-native-thermal-receipt-printer/blob/main/example/src/HomeScreen.tsx)
+[See more here](https://github.com/30SAS/react-native-thermal-receipt-printer/example/src/HomeScreen.tsx)
 
 ## Troubleshoot
 
