@@ -51,15 +51,15 @@ export var processColumnText = function (texts, columnWidth, columnAliment, colu
     var rest_texts = ['', '', ''];
     var result = '';
     texts.map(function (text, idx) {
-        var _a, _b;
+        var _a, _b, _c;
         var columnWidthAtRow = Math.round(columnWidth === null || columnWidth === void 0 ? void 0 : columnWidth[idx]);
-        if (text.length >= columnWidth[idx]) {
+        if ((text === null || text === void 0 ? void 0 : text.length) >= columnWidth[idx]) {
             var processedText = processNewLine(text, columnWidthAtRow);
-            result += ((_a = columnStyle === null || columnStyle === void 0 ? void 0 : columnStyle[idx]) !== null && _a !== void 0 ? _a : '') + processAlignText(processedText.text, columnWidthAtRow - processedText.text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
-            rest_texts[idx] = processedText.text_tail;
+            result += ((_a = columnStyle === null || columnStyle === void 0 ? void 0 : columnStyle[idx]) !== null && _a !== void 0 ? _a : '') + processAlignText(processedText.text, columnWidthAtRow - ((_b = processedText === null || processedText === void 0 ? void 0 : processedText.text) === null || _b === void 0 ? void 0 : _b.length), columnAliment[idx]) + (idx !== 2 ? " " : "");
+            rest_texts[idx] = processedText === null || processedText === void 0 ? void 0 : processedText.text_tail;
         }
         else {
-            result += ((_b = columnStyle === null || columnStyle === void 0 ? void 0 : columnStyle[idx]) !== null && _b !== void 0 ? _b : '') + processAlignText(text.trim(), columnWidthAtRow - text.length, columnAliment[idx]) + (idx !== 2 ? " " : "");
+            result += ((_c = columnStyle === null || columnStyle === void 0 ? void 0 : columnStyle[idx]) !== null && _c !== void 0 ? _c : '') + processAlignText(text === null || text === void 0 ? void 0 : text.trim(), columnWidthAtRow - (text === null || text === void 0 ? void 0 : text.length), columnAliment[idx]) + (idx !== 2 ? " " : "");
         }
     });
     var index_nonEmpty = rest_texts.findIndex(function (rest_text) { return rest_text != ''; });
